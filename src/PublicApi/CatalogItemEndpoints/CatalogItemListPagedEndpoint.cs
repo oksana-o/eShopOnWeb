@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Specifications;
+using Microsoft.Extensions.Logging;
 using MinimalApi.Endpoint;
 
 namespace Microsoft.eShopWeb.PublicApi.CatalogItemEndpoints;
@@ -19,7 +20,12 @@ public class CatalogItemListPagedEndpoint : IEndpoint<IResult, ListPagedCatalogI
 {
     private readonly IUriComposer _uriComposer;
     private readonly IMapper _mapper;
+    private readonly ILogger<CatalogItemListPagedEndpoint> _logger;
 
+    public CatalogItemListPagedEndpoint(ILogger<CatalogItemListPagedEndpoint> logger)
+    {
+        _logger = logger;
+    }
     public CatalogItemListPagedEndpoint(IUriComposer uriComposer, IMapper mapper)
     {
         _uriComposer = uriComposer;
@@ -67,7 +73,7 @@ public class CatalogItemListPagedEndpoint : IEndpoint<IResult, ListPagedCatalogI
         {
             response.PageCount = totalItems > 0 ? 1 : 0;
         }
-
+        _logger.LogInformation("Returned X items");
         return Results.Ok(response);
     }
 }
